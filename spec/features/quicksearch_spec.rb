@@ -37,18 +37,18 @@ describe 'Quicksearch' do
         dropdown = find('ul[role="listbox"]')
         expect(dropdown).to have_content('Top Leader, Supertown')
         expect(dropdown).to have_content('Top → TopGroup')
-        expect(dropdown).to have_content('Top')
 
         fill_in 'quicksearch', with: 'Top Leader'
         expect(dropdown).to have_content('Top Leader, Supertown')
+        expect(dropdown).not_to have_content('Top → TopGroup')
 
         fill_in 'quicksearch', with: 'TopGroup'
+        expect(dropdown).not_to have_content('Top Leader, Supertown')
         expect(dropdown).to have_content('Top → TopGroup')
 
-        fill_in 'quicksearch', with: 'TopGroup'
+        fill_in 'quicksearch', with: 'Supertown'
         expect(dropdown).to have_content('Top Leader, Supertown')
-
-
+        expect(dropdown).not_to have_content('Top → TopGroup')
       end
     end
   end
