@@ -13,9 +13,7 @@ module SearchStrategies
 
       search_results = Person.search(@term)
       
-      entries = []
-
-      entries += search_results
+      entries = search_results
                   .accessible_by(PersonReadables.new(@user))
                   .select(pg_rank_alias) # add pg_search rank to select list of base query again
 
@@ -26,7 +24,9 @@ module SearchStrategies
                           roles.person_id = people.id)", now: Time.now.utc.to_s(:db))
       end
 
-      entries += Group::DeletedPeople.deleted_for_multiple(deleted_people_indexable_layers) & search_results
+      entries += Group::DeletedPeople.deleted_for_multiple(
+        deleted_people_indexable_layers
+      ) & search_results
 
       entries.uniq
     end

@@ -110,8 +110,14 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     :gender, [:years, :integer], :birthday
   ]
 
-  SEARCH_ATTRS = [:first_name, :last_name, :company_name, :nickname, :email, :address, :zip_code, :town, :country, :birthday, :additional_information]
-  ASSOCIATED_SEARCH_ATTRS = {phone_numbers: [:number], social_accounts: [:name], additional_emails: [:email]}
+  SEARCH_ATTRS = [
+    :first_name, :last_name, :company_name, :nickname, :email, :address, :zip_code, :town, 
+    :country, :birthday, :additional_information
+  ]
+  
+  ASSOCIATED_SEARCH_ATTRS = {
+    phone_numbers: [:number], social_accounts: [:name], additional_emails: [:email]
+  }
 
   GENDERS = %w(m w).freeze
 

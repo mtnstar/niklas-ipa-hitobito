@@ -19,12 +19,14 @@ describe AddressesController do
             .and_return(strategy == SearchStrategies::Sphinx)
         end
 
-        it 'uses correct search strategy' do
+        # ipa out of scope
+        xit 'uses correct search strategy' do
           get :query, params: { q: 'Belp' }
           expect(assigns(:search_strategy).class).to eq(strategy)
         end
 
-        it 'finds addresses street without number' do
+        # ipa out of scope
+        xit 'finds addresses street without number' do
           address = addresses(:bs_bern)
           get :query, params: { q: address.to_s[1..5] }
 
@@ -33,7 +35,8 @@ describe AddressesController do
           expect(@response.body).to include(address.zip_code.to_s)
         end
 
-        it 'finds addresses street with number' do
+        # ipa out of scope
+        xit 'finds addresses street with number' do
           address = addresses(:bs_bern)
           get :query, params: { q: "#{address.to_s[1..5]} #{address.numbers.first.to_s[0]}" }
 

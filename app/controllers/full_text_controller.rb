@@ -26,7 +26,7 @@ class FullTextController < ApplicationController
   private
 
   def query_results
-    @people = with_query { search_strategy.list_people }
+    @people = with_query { search_strategy.query_people }
     @groups = with_query { search_strategy.query_groups }
     @events = with_query { decorate_events(search_strategy.query_events) }
     @invoices = with_query { decorate_invoices(search_strategy.query_invoices) }
