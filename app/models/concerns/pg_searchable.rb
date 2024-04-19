@@ -8,8 +8,9 @@ module PgSearchable
     model.include PgSearch::Model
 
     model.pg_search_scope :search,
-      against: model::SEARCH_ATTRS,
-      associated_against: model::ASSOCIATED_SEARCH_ATTRS,
+      against: model.const_defined?(:SEARCH_ATTRS) ? model::SEARCH_ATTRS : [],
+      associated_against: model.const_defined?(:ASSOCIATED_SEARCH_ATTRS) ? 
+                          model::ASSOCIATED_SEARCH_ATTRS : [],
       using: {
         tsearch: { prefix: true }
       }
