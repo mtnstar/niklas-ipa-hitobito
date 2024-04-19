@@ -158,7 +158,7 @@ describe SearchStrategies::Pg do
   describe '#query_groups' do
 
     context 'as leader' do
-      let(:user) { people(:top_leader) }
+      let(:user) { @bl_leader }
 
       it 'finds groups' do
         result = strategy(groups(:bottom_layer_one).to_s[0..5]).query_groups
