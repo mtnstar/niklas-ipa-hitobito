@@ -20,17 +20,6 @@ module SearchStrategies
       @page = page
     end
 
-    def list_people
-      return Person.none.page(1) if @term.blank?
-
-      query_accessible_people do |ids|
-        entries = fetch_people(ids)
-        entries = Person::PreloadGroups.for(entries)
-        entries = Person::PreloadPublicAccounts.for(entries)
-        entries
-      end
-    end
-
     def query_people
       # override
       Person.none.page(1)
@@ -56,58 +45,10 @@ module SearchStrategies
       Invoice.none.page(1)
     end
 
-    def inspect
-      "<#{self.class.name}: term: #{@term.inspect}>"
-    end
-
     protected
 
     def term_present?
       @term.present? && @term.length >= MIN_TERM_LENGTH
-    end
-
-    def fetch_people(_ids)
-      # override
-      Person.none.page(1)
-    end
-
-    def query_accessible_people
-      ids = accessible_people_ids
-      return Person.none.page(1) if ids.blank?
-
-      yield ids
-    end
-
-    def accessible_people_ids
-      key = "accessible_people_ids_for_#{@user.id}"
-      Rails.cache.fetch(key, expires_in: 15.minutes) do
-        ids = load_accessible_people_ids
-        if Ability.new(@user).can?(:index_people_without_role, Person)
-          ids += load_deleted_people_ids
-        end
-
-        ids += load_accessible_deleted_people_ids
-
-        ids.uniq
-      end
-    end
-
-    def load_accessible_people_ids
-      Person.accessible_by(PersonReadables.new(@user)).
-        unscope(:select). # accessible_by selects all people attributes, even when using .pluck
-        pluck(:id)
-    end
-
-    def load_deleted_people_ids
-      Person.where('NOT EXISTS (SELECT * FROM roles ' \
-                   "WHERE (roles.deleted_at IS NULL OR
-                           roles.deleted_at > :now) AND
-                          roles.person_id = people.id)", now: Time.now.utc.to_s(:db))
-            .pluck(:id)
-    end
-
-    def load_accessible_deleted_people_ids
-      Group::DeletedPeople.deleted_for_multiple(deleted_people_indexable_layers).pluck(:id)
     end
 
     def deleted_people_indexable_layers
