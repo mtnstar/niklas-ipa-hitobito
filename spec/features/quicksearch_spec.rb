@@ -6,26 +6,6 @@
 require 'spec_helper'
 
 describe 'Quicksearch' do
-  context 'with sphinx' do
-    sphinx_environment(:people, :groups, :events) do
-      it 'finds people and groups', js: true do
-        obsolete_node_safe do
-          index_sphinx
-          sign_in
-          visit root_path
-
-          fill_in 'quicksearch', with: 'top'
-
-          dropdown = find('ul[role="listbox"]')
-          expect(dropdown).to have_content('Top Leader, Supertown')
-          expect(dropdown).to have_content('Top → TopGroup')
-          expect(dropdown).to have_content('Top')
-          expect(dropdown).to have_content('Top: Top Course (TOP-007)')
-        end
-      end
-    end
-  end
-
   context 'with pg_search' do
     it 'finds people and groups', js: true do
       obsolete_node_safe do
