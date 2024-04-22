@@ -20,14 +20,6 @@ module FullTextSearchStrategy
   end
 
   def search_strategy_class
-    if sphinx?
-      SearchStrategies::Sphinx
-    else
-      SearchStrategies::Pg
-    end
-  end
-
-  def sphinx?
-    Hitobito::Application.sphinx_present?
+    SearchStrategies::Pg
   end
 end

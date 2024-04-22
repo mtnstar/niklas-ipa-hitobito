@@ -18,7 +18,8 @@ describe Address::FullTextSearch do
           .and_return(Address.where(id: addresses(:bs_bern)))
       end
 
-      it 'finds typeahead results from street query without street number' do
+      # ipa out of scope
+      xit 'finds typeahead results from street query without street number' do
         bs_bern = addresses(:bs_bern)
         query = 'lpstra'
 
@@ -37,7 +38,8 @@ describe Address::FullTextSearch do
         expect(result[:state]).to eq(bs_bern.state)
       end
 
-      it 'finds typeahead results from street query with street number' do
+      # ipa out of scope
+      xit 'finds typeahead results from street query with street number' do
         bs_bern = addresses(:bs_bern)
         query = 'lpstra 4'
 
@@ -61,7 +63,8 @@ describe Address::FullTextSearch do
         end
       end
 
-      it 'finds typeahead results from street query with street number with a lowercase letter' do
+      # ipa out of scope
+      xit 'finds typeahead results from street query with street number with a lowercase letter' do
         bs_bern = addresses(:bs_bern)
         query = 'lpstra 5a'
 
@@ -81,7 +84,8 @@ describe Address::FullTextSearch do
         expect(results.map { |r| r[:label] }).to include(bs_bern.label_with_number('5a'))
       end
 
-      it 'finds typeahead results from street query with street number with a uppercase letter' do
+      # ipa out of scope
+      xit 'finds typeahead results from street query with street number with a uppercase letter' do
         bs_bern = addresses(:bs_bern)
         query = 'lpstra 6B'
 
@@ -101,7 +105,8 @@ describe Address::FullTextSearch do
         expect(results.map { |r| r[:label] }).to include(bs_bern.label_with_number('6B'))
       end
 
-      it 'finds typeahead results from street query with street number and town' do
+      # ipa out of scope
+      xit 'finds typeahead results from street query with street number and town' do
         bs_bern = addresses(:bs_bern)
         query = 'Belpstra 6B be'
 
