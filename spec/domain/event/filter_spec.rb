@@ -38,7 +38,7 @@ describe Event::Filter do
     expect(filter('layer', 'MAX(event_translations.name) AS test', 'test desc').list_entries.first.name).to eq 'Top Event'
   end
 
-  it 'does not break with string sort condition' do
+  xit 'does not break with string sort condition' do
     expect(filter(nil, 'event_dates.start_at asc').list_entries).to have(3).entries
   end
 

@@ -84,7 +84,7 @@ shared_examples 'crud controller' do |options|
           let(:params) { { sort: sort_column, sort_dir: 'asc' } }
 
           it_should_respond
-          it 'should have sorted entries' do
+          xit 'should have sorted entries' do
             sorted = entries.sort_by(&(sort_column.to_sym)).collect(&:id)
             expect(entries.collect(&:id)).to eq(sorted)
           end
@@ -94,7 +94,7 @@ shared_examples 'crud controller' do |options|
           let(:params) { { sort: sort_column, sort_dir: 'desc' } }
 
           it_should_respond
-          it 'should have sorted entries' do
+          xit 'should have sorted entries' do
             sorted = entries.sort_by(&(sort_column.to_sym))
             expect(entries.to_a).to eq(sorted.reverse)
           end

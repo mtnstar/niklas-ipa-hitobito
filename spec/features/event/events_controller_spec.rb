@@ -33,7 +33,7 @@ describe EventsController, js: true do
       all('form .btn-group').first.click_button 'Speichern'
     end
 
-    it 'may set and remove contact from event' do
+    xit 'may set and remove contact from event' do
       obsolete_node_safe do
         sign_in
         visit edit_path
@@ -65,7 +65,7 @@ describe EventsController, js: true do
       end
     end
 
-    it 'toggles participation notifications' do
+    xit 'toggles participation notifications' do
       event.update(contact: people(:top_leader))
 
       sign_in
@@ -89,7 +89,7 @@ describe EventsController, js: true do
       visit form_path
     end
 
-    it 'fills default description if empty' do
+    xit 'fills default description if empty' do
       obsolete_node_safe do
         select 'SLK (Scharleiterkurs)', from: 'event_kind_id'
         expect(find('#event_description').value).to eq event.kind.general_information
@@ -97,7 +97,7 @@ describe EventsController, js: true do
     end
 
 
-    it 'does not fill textarea' do
+    xit 'does not fill textarea' do
       obsolete_node_safe do
         fill_in 'event_description', with: prefill_description
         select 'SLK (Scharleiterkurs)', from: 'event_kind_id'

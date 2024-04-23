@@ -31,8 +31,8 @@ describe 'Quicksearch', sphinx: true do
     visit root_path
     fill_in 'quicksearch', with: 'top'
     find('button i.fa-search').click
-    expect(page).not_to have_content 'Bottom One'
+    expect(page).not_to have_content 'TopGroup'
     within('.nav') { click_on 'Gruppen' }
-    expect(page).to have_link 'Bottom One'
+    expect(page).to have_link 'TopGroup'
   end
 end

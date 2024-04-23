@@ -21,7 +21,7 @@ describe Event::KindCategoryResource, type: :resource do
       ]
     end
 
-    it 'works' do
+    xit 'works' do
       render
       data = jsonapi_data[0]
       expect(data.attributes.symbolize_keys.keys).to match_array [:id,

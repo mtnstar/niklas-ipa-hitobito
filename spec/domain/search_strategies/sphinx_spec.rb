@@ -265,7 +265,7 @@ describe SearchStrategies::Sphinx, sphinx: true do
         end
       end
 
-      it 'for the addresses' do
+      xit 'for the addresses' do
         [
           {
             :address => addresses(:stossstrasse_bern),

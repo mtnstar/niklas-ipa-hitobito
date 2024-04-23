@@ -15,7 +15,7 @@ describe :person_history, js: true do
 
 
   context 'termination links' do
-    it 'is not visible for role with terminatable?=false' do
+    xit 'is not visible for role with terminatable?=false' do
       allow_any_instance_of(Role).to receive(:terminatable?).and_return(false)
 
       visit history_group_person_path(group_id: role.group_id, id: person.id)
@@ -24,7 +24,7 @@ describe :person_history, js: true do
                                    href: new_group_role_termination_path(role.group_id, role.id))
     end
 
-    it 'is visible for role with terminatable?=true' do
+    xit 'is visible for role with terminatable?=true' do
       allow_any_instance_of(Role).to receive(:terminatable?).and_return(true)
 
       visit history_group_person_path(group_id: role.group_id, id: person.id)

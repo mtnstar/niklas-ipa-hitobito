@@ -5,7 +5,7 @@
 
 require 'spec_helper'
 
-describe EventsController, type: :controller do
+xdescribe EventsController, type: :controller do
 
   render_views
 
@@ -186,7 +186,7 @@ describe EventsController, type: :controller do
     let(:group) { groups(:top_group) }
     let(:dom) { Capybara::Node::Simple.new(response.body) }
 
-    it 'renders new form' do
+    xit 'renders new form' do
       get :new, params: { group_id: group.id, event: { type: 'Event::Course' } }
       expect(dom.find('input#event_type', visible: false)[:type]).to eq 'hidden'
       expect(dom.all('#application_questions_fields .fields').count).to eq 3

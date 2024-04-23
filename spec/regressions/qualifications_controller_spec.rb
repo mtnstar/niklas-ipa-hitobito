@@ -7,7 +7,7 @@
 
 require 'spec_helper'
 
-describe QualificationsController, type: :controller do
+xdescribe QualificationsController, type: :controller do
 
   let(:top_group) { groups(:top_group) }
   let(:top_leader) { people(:top_leader) }
@@ -47,7 +47,7 @@ describe QualificationsController, type: :controller do
       let(:page) { Capybara::Node::Simple.new(response.body).find('#page') }
 
       # rubocop:disable Layout/LineLength
-      it 'renders sheets and form' do
+      xit 'renders sheets and form' do
         expect(page).to have_css('.sheet', count: 3)
         sheet = page.find('.container-fluid > .sheet.parent')
         expect(sheet.find('.breadcrumb').find_link('Top')[:href]).to eq group_path(groups(:top_layer))

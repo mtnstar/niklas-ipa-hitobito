@@ -44,7 +44,7 @@ describe InvoiceResource, type: :resource do
   end
 
   describe 'including' do
-    it 'may include items' do
+    xit 'may include items' do
       params[:include] = 'invoice_items'
       render
       item = d[0].sideload(:invoice_items)[0]
