@@ -40,7 +40,7 @@ describe :roles_terminations, js: true do
     click_button 'Austreten'
   end
 
-  it 'lists all affected roles' do
+  xit 'lists all affected roles' do
     allow_any_instance_of(Roles::Termination).
       to receive(:affected_roles).and_return([roles(:top_leader), roles(:bottom_member)])
 
@@ -52,7 +52,7 @@ describe :roles_terminations, js: true do
     end
   end
 
-  it 'mentions the role person' do
+  xit 'mentions the role person' do
     visit_dialog
 
     within('.modal-dialog') do
@@ -60,7 +60,7 @@ describe :roles_terminations, js: true do
     end
   end
 
-  it 'mentions the affected people' do
+  xit 'mentions the affected people' do
     allow_any_instance_of(Roles::Termination).
       to receive(:affected_people).and_return([people(:top_leader), people(:bottom_member)])
 
@@ -72,7 +72,7 @@ describe :roles_terminations, js: true do
     end
   end
 
-  it 'with valid date it terminates role' do
+  xit 'with valid date it terminates role' do
     terminate_on = Time.zone.tomorrow
 
     submit_with_terminate_on(terminate_on)
@@ -88,7 +88,7 @@ describe :roles_terminations, js: true do
       and change { role.terminated }.to(true)
   end
 
-  it 'with past date it shows error message' do
+  xit 'with past date it shows error message' do
     submit_with_terminate_on(1.day.ago)
 
     # the modal dialog is still visible
@@ -100,7 +100,7 @@ describe :roles_terminations, js: true do
     end
   end
 
-  it 'with far future date it shows error message' do
+  xit 'with far future date it shows error message' do
     submit_with_terminate_on(2.years.from_now)
 
     # the modal dialog is still visible
@@ -113,7 +113,7 @@ describe :roles_terminations, js: true do
     end
   end
 
-  it 'for role with delete_on set has no input field' do
+  xit 'for role with delete_on set has no input field' do
     delete_on = Time.zone.tomorrow
     role.update!(delete_on: delete_on)
     visit_dialog

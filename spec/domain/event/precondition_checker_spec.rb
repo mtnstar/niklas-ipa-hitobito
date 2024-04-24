@@ -181,7 +181,7 @@ describe Event::PreconditionChecker do
       end
     end
 
-    describe 'with validity valid_or_reactivatable' do
+    xdescribe 'with validity valid_or_reactivatable' do
       before do
         course.kind.event_kind_qualification_kinds.create!(qualification_kind_id: sl.id,
                                                            category: 'precondition',

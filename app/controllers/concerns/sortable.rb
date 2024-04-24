@@ -28,10 +28,18 @@ module Sortable
     # Puts null and empty strings last
     def null_safe_sort(sort_expression)
       table_attr, direction = sort_expression.split
+
+      table_name, attribute_name = table_attr.split('.')
+
+      column_type = ActiveRecord::Base.connection
+                                      .columns(table_name)
+                                      .detect { |c| c.name == attribute_name }
+                                      .type
+
       null_safe = 'CASE'
       null_safe << " WHEN #{table_attr} IS NULL THEN 1"
-      null_safe << " WHEN #{table_attr} = '' THEN 1"
-      null_safe << " ELSE 0 END #{direction}"
+      null_safe << " WHEN #{table_attr} = '' THEN 1" if column_type == :string      
+      null_safe << " ELSE 0 END"
       [null_safe, sort_expression]
     end
   end
@@ -44,7 +52,7 @@ module Sortable
     # Enhance the list entries with an optional sort order.
     def list_entries
       if sorting?
-        super.reorder(Arel.sql(sort_expression))
+        super.select('*', Arel.sql(sort_expression)).reorder(Arel.sql(sort_expression_name))
       else
         super
       end
@@ -60,8 +68,22 @@ module Sortable
     end
 
     # Return the sort expression to be used in the list query.
-    def sort_expression
-      Array(sort_columns).collect { |c| "#{c} #{sort_dir}" }.join(', ')
+    def sort_expression(alias: true, aggregate_function: false)
+      (Array(sort_columns).map.with_index do |c, index|
+        alias_name = "order_case_#{index}"
+        if aggregate_function
+          "MAX(#{c.split(/\sAS\s/i).first}) AS #{alias_name}"
+        else
+          # cut off current alias if sort_column already had an alias defined
+          "#{c.split(/\sAS\s/i).first} AS #{alias_name}"
+        end
+      end).join(', ')
+    end
+
+    def sort_expression_name
+      (Array(sort_columns).map.with_index do |c, index|
+        "order_case_#{index} #{params[:sort_dir]}"
+      end).join(', ')
     end
 
     # The sort direction, either 'asc' or 'desc'.

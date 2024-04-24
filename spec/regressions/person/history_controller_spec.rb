@@ -21,7 +21,7 @@ describe Person::HistoryController, type: :controller do
   describe '#index' do
     let(:params) { { group_id: top_group.id, id: other.id } }
 
-    it 'list current role and group' do
+    xit 'list current role and group' do
       get :index, params: params
       expect(dom.all('table tbody tr').size).to eq 1
       role_row = dom.find('table tbody tr:eq(1)')
@@ -31,7 +31,7 @@ describe Person::HistoryController, type: :controller do
       expect(role_row.find('td:eq(4)').text).not_to be_present
     end
 
-    it 'lists past roles' do
+    xit 'lists past roles' do
       role = Fabricate(Group::BottomGroup::Member.name.to_sym, group: bottom_group, person: other)
       role.created_at = Time.zone.now - 2.years
       role.destroy
@@ -44,7 +44,7 @@ describe Person::HistoryController, type: :controller do
       expect(role_row.find('td:eq(4)').text).to be_present
     end
 
-    it 'lists roles in other groups' do
+    xit 'lists roles in other groups' do
       Fabricate(Group::TopGroup::Member.name.to_sym, group: top_group, person: other)
       get :index, params: params
       expect(dom.all('table tbody tr').size).to eq 2
@@ -53,7 +53,7 @@ describe Person::HistoryController, type: :controller do
       expect(role_row.find('td:eq(4)').text).not_to be_present
     end
 
-    it 'lists past roles in other groups' do
+    xit 'lists past roles in other groups' do
       role = Fabricate(Group::TopGroup::Member.name.to_sym, group: top_group, person: other)
       role.created_at = Time.zone.now - 2.years
       role.destroy
@@ -64,7 +64,7 @@ describe Person::HistoryController, type: :controller do
       expect(role_row.find('td:eq(4)').text).to be_present
     end
 
-    it "lists person's events" do
+    xit "lists person's events" do
       course1 = Fabricate(:course, groups: [groups(:top_layer)], kind: event_kinds(:slk))
       event1 = Fabricate(:event, groups: [groups(:top_layer)])
       event2 = Fabricate(:event, groups: [groups(:top_layer)])

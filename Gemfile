@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#  Copyright (c) 2012-2022, Jungwacht Blauring Schweiz. This file is part of
+#  Copyright (c) 2012-2024, Jungwacht Blauring Schweiz. This file is part of
 #  hitobito and licensed under the Affero General Public License version 3
 #  or later. See the COPYING file at the top-level directory or at
 #  https://github.com/hitobito/hitobito.
@@ -56,12 +56,14 @@ gem 'matrix' # required but removed from stlib since ruby 3.2
 gem 'mime-types'
 gem 'mini_magick'
 gem 'mysql2'
+gem 'pg'
+gem 'pg_search'
 gem 'nested_form'
 gem 'nokogiri'
 gem 'oat'
 gem 'paper_trail'
 gem 'paranoia'
-gem 'phonelib'
+gem 'phonelib', '0.8.7'
 gem 'prawn'
 gem 'prawn-markup'
 gem 'prawn-table'

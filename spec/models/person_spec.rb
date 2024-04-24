@@ -72,7 +72,7 @@ describe Person do
     expect(Person.new(company: false, company_name: 'foo')).to have(1).errors_on(:base)
   end
 
-  it 'can be saved with emoji', :mysql do
+  it 'can be saved with emoji', :postgresql do
     person = Person.new(company: false, nickname: 'foo', additional_information: ' Vegetarier😝 ')
     expect(person.save).to be true
     expect(person.errors.messages[:base].size).to be_zero
@@ -101,14 +101,30 @@ describe Person do
     expect(person.save).to be_truthy
   end
 
-  it '#order_by_name orders people by company_name or last_name' do
+  it '#order_by_name orders people by company_name then last_name then first_name and then nickname' do
     Person.destroy_all
-    p1 = Fabricate(:person, company: true, company_name: 'ZZ', last_name: 'AA')
-    p2 = Fabricate(:person, company: false, company_name: 'ZZ', first_name: 'ZZ', last_name: 'BB')
-    p3 = Fabricate(:person, company: true, company_name: 'AA', last_name: 'ZZ')
-    p4 = Fabricate(:person, company: false, first_name: 'AA', last_name: 'BB')
+    p1 = Person.create(company: true, company_name: "AA")
+    p2 = Person.create(company: true, company_name: "BA")
+    p3 = Person.create(company: false, last_name: "AB")
+    p4 = Person.create(company: false, last_name: "BB")
+    p5 = Person.create(company: false, first_name: "AC")
+    p6 = Person.create(company: false, first_name: "BC")
+    p7 = Person.create(company: false, nickname: "AD")
+    p8 = Person.create(company: false, nickname: "BD")
 
-    expect(Person.order_by_name.collect(&:to_s)).to eq([p3, p4, p2, p1].collect(&:to_s))
+    # Checking order by name with hardcoded nickname prefixes
+    expect(Person.order_by_name.collect(&:to_s)).to eq([p1, p3, p5, " / AD", p2, p4, p6, " / BD"].collect(&:to_s))
+  end
+
+  it '#order_by_name orders people with same last_name by first_name' do
+    Person.destroy_all
+    p1 = Person.create(last_name: "AA")
+    p2 = Person.create(last_name: "BB", first_name: "AA")
+    p3 = Person.create(last_name: "BB", first_name: "BB")
+    p4 = Person.create(last_name: "CC")
+
+    # Checking order by name with hardcoded nickname prefixes
+    expect(Person.order_by_name.collect(&:to_s)).to eq([p1, p2, p3, p4].collect(&:to_s))
   end
 
   context 'with one role' do
@@ -490,7 +506,7 @@ describe Person do
     expect(attrs[:nickname]).to eq(label: 'Übername', type: :string)
     expect(attrs[:company_name]).to eq(label: 'Firmenname', type: :string)
     expect(attrs[:email]).to eq(label: 'Haupt-E-Mail', type: :string)
-    expect(attrs[:address]).to eq(label: 'Adresse', type: :text)
+    expect(attrs[:address]).to eq(label: 'Adresse', type: :string)
     expect(attrs[:zip_code]).to eq(label: 'PLZ', type: :string)
     expect(attrs[:town]).to eq(label: 'Ort', type: :string)
     expect(attrs[:country]).to eq(label: 'Land', type: :string)

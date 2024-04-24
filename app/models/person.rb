@@ -110,6 +110,15 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     :gender, [:years, :integer], :birthday
   ]
 
+  SEARCH_ATTRS = [
+    :first_name, :last_name, :company_name, :nickname, :email, :address, :zip_code, :town, 
+    :country, :birthday, :additional_information
+  ]
+  
+  ASSOCIATED_SEARCH_ATTRS = {
+    phone_numbers: [:number], social_accounts: [:name], additional_emails: [:email]
+  }
+
   GENDERS = %w(m w).freeze
 
   # rubocop:disable Style/MutableConstant meant to be extended in wagons
@@ -145,7 +154,8 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
   include TwoFactorAuthenticatable
   include PersonTags::ValidationTagged
   include People::SelfRegistrationReasons
-
+  include PgSearchable
+  
   i18n_enum :gender, GENDERS
   i18n_setter :gender, (GENDERS + [nil])
   i18n_boolean_setter :company
@@ -279,8 +289,8 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     where.not(address: [nil, '']).
       where.not(zip_code: [nil, '']).
       where.not(town: [nil, '']).
-      where('(last_name IS NOT NULL AND last_name <> "") OR '\
-            '(company_name IS NOT NULL AND company_name <> "")')
+      where('(last_name IS NOT NULL AND last_name <> \'\') OR '\
+            '(company_name IS NOT NULL AND company_name <> \'\')')
   }
   scope :with_mobile, -> { joins(:phone_numbers).where(phone_numbers: { label: 'Mobil' }) }
 
@@ -288,13 +298,24 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
 
   class << self
     def order_by_name
-      order(Arel.sql(order_by_name_statement.join(', ')))
+      select('people.*', Arel.sql(order_by_name_statement)).order(Arel.sql("order_case"))
     end
 
     def order_by_name_statement
-      [company_case_column(:company_name, :last_name),
-       company_case_column(:last_name, :first_name),
-       company_case_column(:first_name, :nickname)]
+      "CASE
+        WHEN people.company = #{connection.quote(true)} THEN people.company_name
+        WHEN people.last_name IS NOT NULL AND people.last_name != '' THEN 
+          CASE
+            WHEN people.first_name IS NOT NULL AND people.first_name != '' THEN 
+              CONCAT(people.last_name, ', ', people.first_name)
+            ELSE 
+              people.last_name
+          END 
+        WHEN people.first_name IS NOT NULL AND people.first_name != '' THEN 
+          people.first_name
+        ELSE
+          people.nickname
+      END AS order_case"
     end
 
     def only_public_data
@@ -327,15 +348,7 @@ class Person < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     def root
       find_by(email: Settings.root_email)
     end
-
-    private
-
-    def company_case_column(if_company, otherwise)
-      "CASE WHEN people.company = #{connection.quoted_true} " \
-      "THEN people.#{if_company} ELSE people.#{otherwise} END"
-    end
   end
-
 
   ### ATTRIBUTE INSTANCE METHODS
 

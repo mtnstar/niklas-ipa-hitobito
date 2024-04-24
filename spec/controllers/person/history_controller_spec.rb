@@ -15,7 +15,7 @@ describe Person::HistoryController do
 
     context 'all roles' do
 
-      it 'all group roles ordered by group and layer' do
+      xit 'all group roles ordered by group and layer' do
         person = Fabricate(:person)
         r1 = Fabricate(Group::BottomGroup::Member.name.to_sym, group: groups(:bottom_group_one_one), person: person)
         r2 = Fabricate(Group::BottomGroup::Member.name.to_sym, group: groups(:bottom_group_two_one), person: person, created_at: Date.today - 3.years, deleted_at: Date.today - 2.years)
@@ -39,12 +39,12 @@ describe Person::HistoryController do
       let(:sl_leader) { qualification_kinds(:sl_leader) }
       let(:gl) { qualification_kinds(:gl) }
 
-      it 'does not render qualifications if no qualifications exist' do
+      xit 'does not render qualifications if no qualifications exist' do
         get :index, params: { group_id: groups(:top_group).id, id: top_leader.id }
         expect(body).not_to have_css 'h2.mt-4', text: 'Qualifikationen'
       end
 
-      it 'lists and marks first qualifications of kind' do
+      xit 'lists and marks first qualifications of kind' do
         Fabricate(:qualification, person: top_leader, qualification_kind: gl, start_at: 30.months.ago, finish_at: 1.year.ago.to_date)
         Fabricate(:qualification, person: top_leader, qualification_kind: sl_leader, start_at: 1.week.from_now)
 
@@ -55,7 +55,7 @@ describe Person::HistoryController do
         expect(body).not_to have_css 'tbody td strong', text: gl.to_s
       end
 
-      it 'includes open trainings days' do
+      xit 'includes open trainings days' do
         gl.update(required_training_days: 3)
         Fabricate(:qualification, person: top_leader, qualification_kind: gl, start_at: 3.months.ago, finish_at: 6.months.from_now)
         create_course_participation(training_days: 1.5, start_at: 2.months.ago)

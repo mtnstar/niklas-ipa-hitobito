@@ -36,8 +36,9 @@ module Globalized
 
     def list
       with_translations.
-        order(translated_label_column).
-        distinct
+      select('*', translated_label_column).
+      order(translated_label_column).
+      distinct
     end
 
     private

@@ -115,7 +115,7 @@ class PeopleController < CrudController
   # loaded which might be before wagon that defines groups / roles has been loaded
   def self.sort_mappings_with_indifferent_access
     { roles: [Person.order_by_role_statement].
-      concat(Person.order_by_name_statement) }.with_indifferent_access
+      concat([Person.order_by_name_statement]) }.with_indifferent_access
   end
 
   private
@@ -138,7 +138,9 @@ class PeopleController < CrudController
 
   def load_people_add_requests
     if params[:range].blank? && can?(:create, @group.roles.new)
-      @person_add_requests = @group.person_add_requests.list.includes(person: :primary_group)
+      @person_add_requests = @group.person_add_requests.select("person_add_requests.person_id")
+                                                       .list
+                                                       .select("person_add_requests.id")
     end
   end
 
@@ -167,7 +169,8 @@ class PeopleController < CrudController
 
   def filter_entries
     entries = add_table_display_to_query(person_filter.entries, current_person)
-    entries = entries.reorder(Arel.sql(sort_expression)) if sorting?
+    entries = entries.select(Arel.sql(sort_expression))
+                     .reorder(Arel.sql(sort_expression_name)) if sorting?
     entries
   end
 
